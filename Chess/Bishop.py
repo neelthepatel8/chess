@@ -1,6 +1,5 @@
 import pygame
 from Piece import Piece
-from Tile import Tile
 
 class Bishop(Piece):
     def __init__(self, image, tile):
@@ -23,13 +22,3 @@ class Bishop(Piece):
             return False
         
         return True
-    
-    def get_possible_moves(self, board):
-        moves = []
-        for tile in board:
-            if not tile: continue
-            if self.can_move(tile):
-                moves.append(tile)
-            
-        return moves
-

@@ -18,17 +18,15 @@ pygame.display.set_caption("Chess")
 # ------ BOARD ------
 gameBoard = Board()
 board = gameBoard.tiles
-
 gameBoard.display_board(window)
 
 # Generate black pieces
-bishop = Bishop('assets/pieces/bishop_black.png', board[13])
+bishop = Bishop('assets/pieces/bishop_black.png', board[2][4])
 b, brect = bishop.display()
-window.blit(b, brect)
+# window.blit(b, brect)
 
 moving = False
 
-current_highlighted = []
 # --------- MAIN LOOP ------
 while True:
 
@@ -43,29 +41,29 @@ while True:
             sys.exit()
     
         # Piece started moving
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if brect.collidepoint(event.pos):
-                moving = True
+        # elif event.type == pygame.MOUSEBUTTONDOWN:
+        #     if brect.collidepoint(event.pos):
+        #         moving = True
 
-        # Piece stopped moving
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if brect.collidepoint(event.pos):
-                for tile in board:
-                    if tile == None: continue
-                    if tile.surface.collidepoint(brect.center):
-                        if (bishop.can_move(tile)):
-                            brect.center = tile.surface.center;
-                            bishop.set_tile(tile)
-                        else:
-                            brect.center = bishop.tile.surface.center
-                        moving = False
-                        break
+        # # Piece stopped moving
+        # elif event.type == pygame.MOUSEBUTTONUP:
+        #     if brect.collidepoint(event.pos):
+        #         for tile in board:
+        #             if tile == None: continue
+        #             if tile.surface.collidepoint(brect.center):
+        #                 if (bishop.can_move(tile)):
+        #                     brect.center = tile.surface.center;
+        #                     bishop.set_tile(tile)
+        #                 else:
+        #                     brect.center = bishop.tile.surface.center
+        #                 moving = False
+        #                 break
 
-        # Piece is moving
-        elif event.type == pygame.MOUSEMOTION and moving:
-            brect.move_ip(event.rel)
-            if not brect.collidepoint(pygame.mouse.get_pos()):
-                brect.center = pygame.mouse.get_pos()
+        # # Piece is moving
+        # elif event.type == pygame.MOUSEMOTION and moving:
+        #     brect.move_ip(event.rel)
+        #     if not brect.collidepoint(pygame.mouse.get_pos()):
+        #         brect.center = pygame.mouse.get_pos()
             
     # ----- GAME PLAY -----
     pygame.display.update()
