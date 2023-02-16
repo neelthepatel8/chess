@@ -8,7 +8,8 @@ class Tile:
         self.surface = None
         self.pos = pos
         self.piece = None
-        self.color = self.determine_color()     
+        self.color = self.determine_color()  
+        self.highlighted = False   
 
     def determine_color(self):
         if self.row % 2 != 0:
@@ -21,3 +22,6 @@ class Tile:
         if x > 8 or x < 1: return True
         if y > 8 or y < 1: return True
         return False
+    
+    def set_highlighted(self):
+        self.highlighted = True
