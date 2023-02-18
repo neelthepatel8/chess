@@ -12,7 +12,7 @@ class Pawn(Piece):
     
     def can_move(self, tile):
         tile_pos = tx, ty = tile.row, tile.col
-        piece_pos = bx, by = self.tile.row, self.tile.col
+        piece_pos = px, py = self.tile.row, self.tile.col
 
         if tile_pos == piece_pos:
             print("Failed same pos")
@@ -22,19 +22,31 @@ class Pawn(Piece):
             print("Failed out of bounds")
             return False
 
-        if ty != by:
+        moving_straight = ty == py
+
+        if not moving_straight:
             return False
 
-        # if abs(tx - bx) < 2:
-        #     if self.color == Color.white and tx - bx > 0:
-        #         return False
-        #     if self.color == Color.black or tx - bx < 0:
-        #         return False
 
-        if abs(tx - bx) == 2:
-            if self.color == Color.black:
-                return bx == self.black_start_row
+        if self.color == Color.black:
+            moving_forward = tx > px
+            at_start = px == self.black_start_row
+
         if self.color == Color.white:
-            return bx == self.white_start_row;
+            moving_forward = tx < px
+            at_start = px == self.white_start_row
+
+        
+        if not moving_forward:
+            return False
+        
+        single_move = abs(tx - px) == 1
+        double_move = abs(tx - px) == 2
+
+        if double_move and at_start:
+            return True
+    
+        if not single_move:
+            return False
         
         return True
