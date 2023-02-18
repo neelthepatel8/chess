@@ -1,4 +1,5 @@
 import pygame
+from settings.Color import *
 
 class Tile:
     def __init__(self, index, pos, row):
@@ -13,14 +14,14 @@ class Tile:
 
     def determine_color(self):
         if self.row % 2 != 0:
-                return 'BLACK' if self.index % 2 == 0 else 'WHITE'
-        return 'WHITE' if self.index % 2 == 0 else 'BLACK'
+                return Color.black if self.index % 2 == 0 else Color.white
+        return Color.white if self.index % 2 == 0 else Color.black
 
     def isOutOfBounds(self):
         x, y = self.row, self.col
-
-        if x > 8 or x < 1: return True
-        if y > 8 or y < 1: return True
+        print(x, y)
+        if x > 7 or x < 0: return True
+        if y > 7 or y < 0: return True
         return False
     
     def set_highlighted(self):

@@ -1,11 +1,11 @@
 import pygame
 from Piece import Piece
-from Color import *
+from settings.Color import *
 
 class Pawn(Piece):
 
-    black_start_row = 6
-    white_start_row = 1
+    black_start_row = 1
+    white_start_row = 6
 
     def __init__(self, image, tile, color):
         super().__init__("Pawn", image, tile, color)
@@ -25,10 +25,11 @@ class Pawn(Piece):
         if ty != by:
             return False
 
-        if self.color == Color.black and (abs(tx - bx) > 2 or tx - bx > 0):
-            return False
-        if self.color == Color.white and (abs(tx - bx) > 2 or tx - bx < 0)):
-            return False
+        # if abs(tx - bx) < 2:
+        #     if self.color == Color.white and tx - bx > 0:
+        #         return False
+        #     if self.color == Color.black or tx - bx < 0:
+        #         return False
 
         if abs(tx - bx) == 2:
             if self.color == Color.black:

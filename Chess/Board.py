@@ -1,7 +1,6 @@
-from colors import *
-from screen_settings import *
+from settings.Color import *
+from settings.screen_settings import *
 from Tile import Tile
-from pprint import pprint
 
 class Board:
 
@@ -38,7 +37,7 @@ class Board:
     def display_board(self, window):
         for row in self.tiles:
             for tile in row:
-                color = Color.dark_color if tile.color == 'BLACK' else Color.light_color
+                color = Color.dark_color if tile.color == Color.black else Color.light_color
                 if tile.highlighted:
                     color = Color.highlight_color
                 tile_surface = pygame.draw.rect(window, color, pygame.Rect(tile.pos, (self.TILE_SIZE, self.TILE_SIZE)))

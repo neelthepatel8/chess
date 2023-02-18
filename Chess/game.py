@@ -2,12 +2,13 @@ import pygame
 import sys
 
 from Tile import Tile
-from Piece import Piece
-from Bishop import Bishop
-from Knight import Knight
+
+from piece_imports import *
+
 from Board import Board
-from Color import *
-from screen_settings import *
+from settings.Color import *
+from settings.screen_settings import *
+from Fen import Fen
 
 # ------- INIT ------
 pygame.init()
@@ -16,6 +17,9 @@ pygame.init()
 window = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption("Chess")
 
+icon = pygame.image.load('assets/game_icon.png')
+pygame.display.set_icon(icon)
+
 
 # ------ BOARD ------
 gameBoard = Board()
@@ -23,13 +27,13 @@ board = gameBoard.tiles
 gameBoard.display_board(window)
 
 # Generate black pieces
-bishop = Bishop('assets/pieces/bishop_black.png', board[7][2])
-knight = Knight('assets/pieces/knight_black.png', board[7][1])
+start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
-pieces = [bishop, knight]
+test_fen = "r2qkb1r/ppp2Qpp/2np4/6Pn/2BpP1b1/8/PPP2P1P/RNB1K1NR"
+fen = Fen(start_fen, board)
+pieces = fen.interpret()
 
 gameBoard.create_pieces()
-
 
 moving = False
 
@@ -69,9 +73,9 @@ while True:
         # Piece is moving
         elif event.type == pygame.MOUSEMOTION and moving:
             currently_moving.rect.move_ip(event.rel)
-            print(f"moved {currently_moving} to {currently_moving.rect.center}")
-            if not currently_moving.rect.collidepoint(pygame.mouse.get_pos()):
-                currently_moving.rect.center = pygame.mouse.get_pos()
+            # print(f"moved {currently_moving} to {currently_moving.rect.center}")
+            # if not currently_moving.rect.collidepoint(pygame.mouse.get_pos()):
+            #     currently_moving.rect.center = pygame.mouse.get_pos()
             
 
     gameBoard.display_board(window)
