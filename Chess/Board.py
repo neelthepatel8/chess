@@ -45,3 +45,12 @@ class Board:
 
         for piece in self.pieces:
             window.blit(self.pieces[piece]["piece"], self.pieces[piece]["piece_rect"])
+    
+    def remove_piece(self, tile):
+        self.pieces.pop(tile)
+    
+    def add_piece(self, tile):
+        self.pieces[tile] = {}
+        p, prect = tile.piece.display()
+        self.pieces[tile]["piece"] = p
+        self.pieces[tile]["piece_rect"] = prect

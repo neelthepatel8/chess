@@ -30,7 +30,7 @@ gameBoard.display_board(window)
 start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
 test_fen = "r2qkb1r/ppp2Qpp/2np4/6Pn/2BpP1b1/8/PPP2P1P/RNB1K1NR"
-fen = Fen(start_fen, board)
+fen = Fen(test_fen, board)
 pieces = fen.interpret()
 
 gameBoard.create_pieces()
@@ -61,10 +61,11 @@ while True:
                 for tile in row:
                     if tile.surface.collidepoint(currently_moving.rect.center):
                         if (currently_moving.can_move(tile)):
+                            gameBoard.remove_piece(currently_moving.tile)   
                             currently_moving.rect.center = tile.surface.center
-                            currently_moving.tile.piece = None
                             currently_moving.set_tile(tile)
-                            currently_moving.tile.piece = currently_moving
+                            currently_moving.tile.piece = currently_moving 
+                            gameBoard.add_piece(currently_moving.tile)   
                         else:
                             currently_moving.rect.center = currently_moving.tile.surface.center
                         moving = False
@@ -73,9 +74,6 @@ while True:
         # Piece is moving
         elif event.type == pygame.MOUSEMOTION and moving:
             currently_moving.rect.move_ip(event.rel)
-            # print(f"moved {currently_moving} to {currently_moving.rect.center}")
-            # if not currently_moving.rect.collidepoint(pygame.mouse.get_pos()):
-            #     currently_moving.rect.center = pygame.mouse.get_pos()
             
 
     gameBoard.display_board(window)
