@@ -9,74 +9,85 @@ from Board import Board
 from settings.Color import *
 from settings.screen_settings import *
 from Fen import Fen
+from Font import Font
 
-# ------- INIT ------
-pygame.init()
+class Chess:
 
-# ------- WINDOW ------
-window = pygame.display.set_mode(SCREEN_SIZE)
-pygame.display.set_caption("Chess")
+    # ------- INIT ------
+    pygame.init()
+    font = Font()
 
-icon = pygame.image.load('assets/game_icon.png')
-pygame.display.set_icon(icon)
+    # ------- WINDOW ------
+    window = pygame.display.set_mode(SCREEN_SIZE)
+    pygame.display.set_caption("Chess")
 
+    icon = pygame.image.load('assets/game_icon.png')
+    pygame.display.set_icon(icon)
 
-# ------ BOARD ------
-gameBoard = Board()
-board = gameBoard.tiles
-gameBoard.display_board(window)
+    # ------ BOARD ------
+    gameBoard = Board()
+    board = gameBoard.tiles
+    gameBoard.display_board(window)
+    
+    # ----- FEN -------
+    start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+    test_fen = "rnbqk3/ppppbp2/5nrQ/8/8/8/PPPP1PPP/RNB1KBNR"
+    fen = Fen(test_fen, board)
+    pieces = fen.interpret()
+    gameBoard.create_pieces()
 
-# Generate black pieces
-start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+    # --------- MAIN LOOP ------
+    def run(self):
+        moving = False
+        gaming = True
+        timer = pygame.time.Clock()
 
-test_fen = "r2qkb1r/ppp2Qpp/2np4/6Pn/2BpP1b1/8/PPP2P1P/RNB1K1NR"
-fen = Fen(test_fen, board)
-pieces = fen.interpret()
+        while gaming:
 
-gameBoard.create_pieces()
+            # --------- EVENT HANDLING -------
+            for event in pygame.event.get():
+                
+                # Quit
+                if event.type == pygame.QUIT:
+                    gaming = False
 
-moving = False
+                # Piece started moving
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    for piece in self.pieces:
+                        if piece.rect.collidepoint(event.pos):
+                            moving = True
+                            currently_moving = piece
 
-# --------- MAIN LOOP ------
-while True:
+                # Piece stopped moving
+                elif event.type == pygame.MOUSEBUTTONUP and moving:
+                    for row in self.board:
+                        for tile in row:
+                            if tile.surface.collidepoint(currently_moving.rect.center):
+                                if (currently_moving.can_move(tile)):
+                                    self.gameBoard.remove_piece(currently_moving.tile)   
+                                    currently_moving.rect.center = tile.surface.center
+                                    currently_moving.set_tile(tile)
+                                    currently_moving.tile.piece = currently_moving 
+                                    self.gameBoard.add_piece(currently_moving.tile)   
+                                else:
+                                    currently_moving.rect.center = currently_moving.tile.surface.center
+                                moving = False
+                                break
 
-    # --------- EVENT HANDLING -------
-    for event in pygame.event.get():
-        
-        # Quit
-        if event.type == pygame.QUIT:
+                # Piece is moving
+                elif event.type == pygame.MOUSEMOTION and moving:
+                    currently_moving.rect.move_ip(event.rel)
+                    
+            # ------ DISPLAY UPDATE -----
+            self.gameBoard.display_board(self.window)
+            pygame.display.update()
+            timer.tick(FPS)
+
+        else:
             pygame.quit()
             sys.exit()
 
-        # Piece started moving
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            for piece in pieces:
-                if piece.rect.collidepoint(event.pos):
-                    moving = True
-                    currently_moving = piece
 
-        # Piece stopped moving
-        elif event.type == pygame.MOUSEBUTTONUP and moving:
-            for row in board:
-                for tile in row:
-                    if tile.surface.collidepoint(currently_moving.rect.center):
-                        if (currently_moving.can_move(tile)):
-                            gameBoard.remove_piece(currently_moving.tile)   
-                            currently_moving.rect.center = tile.surface.center
-                            currently_moving.set_tile(tile)
-                            currently_moving.tile.piece = currently_moving 
-                            gameBoard.add_piece(currently_moving.tile)   
-                        else:
-                            currently_moving.rect.center = currently_moving.tile.surface.center
-                        moving = False
-                        break
-
-        # Piece is moving
-        elif event.type == pygame.MOUSEMOTION and moving:
-            currently_moving.rect.move_ip(event.rel)
-            
-
-    gameBoard.display_board(window)
-
-    # ----- GAME PLAY -----
-    pygame.display.update()
+if __name__ == "__main__":
+    chess = Chess()
+    chess.run()

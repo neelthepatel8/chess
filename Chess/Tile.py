@@ -1,5 +1,6 @@
 import pygame
 from settings.Color import *
+from Font import *
 
 class Tile:
     def __init__(self, index, pos, row):
@@ -26,3 +27,9 @@ class Tile:
     
     def set_highlighted(self):
         self.highlighted = True
+    
+    def set_text(self, text):
+        font = Font()
+        color = Color.light_color if self.color == Color.black else Color.dark_color
+        text_render = font.open_sans_small.render(text, True, color)
+        return text_render
